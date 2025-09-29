@@ -187,99 +187,99 @@ For deeper debugging, enable MCP client logging (Cursor/Claude provide toggles) 
 ### Phase 1: Core READ Operations (High Priority)
 
 #### Finances API
-- [ ] **ListFinancialEventGroups** - List financial event groups
-- [ ] **ListFinancialEventsByGroupId** - List financial events by group
-- [ ] **ListFinancialEventsByOrderId** - List financial events by order
-- [ ] **ListFinancialEvents** - List all financial events
+- [ ] **ListFinancialEventGroups** - List financial event groups [#4](https://github.com/berrydev-ai/sp-api-mcp-go/issues/4)
+- [ ] **ListFinancialEventsByGroupId** - List financial events by group [#5](https://github.com/berrydev-ai/sp-api-mcp-go/issues/5)
+- [ ] **ListFinancialEventsByOrderId** - List financial events by order [#6](https://github.com/berrydev-ai/sp-api-mcp-go/issues/6)
+- [ ] **ListFinancialEvents** - List all financial events [#7](https://github.com/berrydev-ai/sp-api-mcp-go/issues/7)
 
 #### FBA Inventory API
-- [ ] **GetInventorySummaries** - Get inventory summaries
+- [ ] **GetInventorySummaries** - Get inventory summaries [#8](https://github.com/berrydev-ai/sp-api-mcp-go/issues/8)
 
 #### Product Pricing API
-- [ ] **GetPricing** - Get pricing for products
-- [ ] **GetCompetitivePricing** - Get competitive pricing
+- [ ] **GetPricing** - Get pricing for products [#9](https://github.com/berrydev-ai/sp-api-mcp-go/issues/9)
+- [ ] **GetCompetitivePricing** - Get competitive pricing [#10](https://github.com/berrydev-ai/sp-api-mcp-go/issues/10)
 - [ ] **GetListingOffers** - Get listing offers
 - [ ] **GetItemOffers** - Get item offers
 - [ ] **GetItemOffersBatch** - Get item offers in batch
 
 #### Product Fees API
-- [ ] **GetMyFeesEstimateForSKU** - Get fees estimate for SKU
-- [ ] **GetMyFeesEstimateForASIN** - Get fees estimate for ASIN
+- [ ] **GetMyFeesEstimateForSKU** - Get fees estimate for SKU [#11](https://github.com/berrydev-ai/sp-api-mcp-go/issues/11)
+- [ ] **GetMyFeesEstimateForASIN** - Get fees estimate for ASIN [#12](https://github.com/berrydev-ai/sp-api-mcp-go/issues/12)
 
 ### Phase 2: Enhanced READ Functionality (Medium Priority)
 
 #### Catalog Items API
-- [ ] **SearchCatalogItems** - Search for catalog items
-- [ ] **GetCatalogItem** - Get details for a specific catalog item
+- [ ] **SearchCatalogItems** - Search for catalog items [#13](https://github.com/berrydev-ai/sp-api-mcp-go/issues/13)
+- [ ] **GetCatalogItem** - Get details for a specific catalog item [#14](https://github.com/berrydev-ai/sp-api-mcp-go/issues/14)
 
 #### Listings Items API
-- [ ] **GetListingsItem** - Get listing details
+- [ ] **GetListingsItem** - Get listing details [#15](https://github.com/berrydev-ai/sp-api-mcp-go/issues/15)
 
 #### Sellers API
-- [ ] **GetMarketplaceParticipations** - Get marketplace participations
+- [ ] **GetMarketplaceParticipations** - Get marketplace participations [#16](https://github.com/berrydev-ai/sp-api-mcp-go/issues/16)
 
 #### FBA Inbound API (READ-only)
-- [ ] **GetInboundGuidance** - Get inbound guidance for items
-- [ ] **GetPreorderInfo** - Get preorder information
-- [ ] **GetPrepInstructions** - Get prep instructions
-- [ ] **GetTransportDetails** - Get transport details
-- [ ] **GetLabels** - Get inbound shipment labels
-- [ ] **GetBillOfLading** - Get bill of lading
-- [ ] **GetShipments** - List inbound shipments
-- [ ] **GetShipmentItemsByShipmentId** - Get shipment items
-- [ ] **GetShipmentItems** - Get shipment items across shipments
+- [ ] **GetInboundGuidance** - Get inbound guidance for items [#17](https://github.com/berrydev-ai/sp-api-mcp-go/issues/17)
+- [ ] **GetPreorderInfo** - Get preorder information [#18](https://github.com/berrydev-ai/sp-api-mcp-go/issues/18)
+- [ ] **GetPrepInstructions** - Get prep instructions [#19](https://github.com/berrydev-ai/sp-api-mcp-go/issues/19)
+- [ ] **GetTransportDetails** - Get transport details [#20](https://github.com/berrydev-ai/sp-api-mcp-go/issues/20)
+- [ ] **GetLabels** - Get inbound shipment labels [#21](https://github.com/berrydev-ai/sp-api-mcp-go/issues/21)
+- [ ] **GetBillOfLading** - Get bill of lading [#22](https://github.com/berrydev-ai/sp-api-mcp-go/issues/22)
+- [ ] **GetShipments** - List inbound shipments [#23](https://github.com/berrydev-ai/sp-api-mcp-go/issues/23)
+- [ ] **GetShipmentItemsByShipmentId** - Get shipment items [#24](https://github.com/berrydev-ai/sp-api-mcp-go/issues/24)
+- [ ] **GetShipmentItems** - Get shipment items across shipments [#25](https://github.com/berrydev-ai/sp-api-mcp-go/issues/25)
 
 #### FBA Outbound API (READ-only)
-- [ ] **GetFulfillmentPreview** - Get fulfillment preview
-- [ ] **GetFulfillmentOrder** - Get fulfillment order details
-- [ ] **ListAllFulfillmentOrders** - List all fulfillment orders
-- [ ] **GetPackageTrackingDetails** - Get package tracking details
-- [ ] **ListReturnReasonCodes** - List return reason codes
-- [ ] **GetFulfillmentReturn** - Get fulfillment return
-- [ ] **GetFeatures** - Get available features
-- [ ] **GetFeatureInventory** - Get feature inventory
-- [ ] **GetFeatureSKU** - Get feature SKU
+- [ ] **GetFulfillmentPreview** - Get fulfillment preview [#26](https://github.com/berrydev-ai/sp-api-mcp-go/issues/26)
+- [ ] **GetFulfillmentOrder** - Get fulfillment order details [#27](https://github.com/berrydev-ai/sp-api-mcp-go/issues/27)
+- [ ] **ListAllFulfillmentOrders** - List all fulfillment orders [#28](https://github.com/berrydev-ai/sp-api-mcp-go/issues/28)
+- [ ] **GetPackageTrackingDetails** - Get package tracking details [#29](https://github.com/berrydev-ai/sp-api-mcp-go/issues/29)
+- [ ] **ListReturnReasonCodes** - List return reason codes [#30](https://github.com/berrydev-ai/sp-api-mcp-go/issues/30)
+- [ ] **GetFulfillmentReturn** - Get fulfillment return [#31](https://github.com/berrydev-ai/sp-api-mcp-go/issues/31)
+- [ ] **GetFeatures** - Get available features [#32](https://github.com/berrydev-ai/sp-api-mcp-go/issues/32)
+- [ ] **GetFeatureInventory** - Get feature inventory [#33](https://github.com/berrydev-ai/sp-api-mcp-go/issues/33)
+- [ ] **GetFeatureSKU** - Get feature SKU [#34](https://github.com/berrydev-ai/sp-api-mcp-go/issues/34)
 
 ### Phase 3: Advanced READ Features (Lower Priority)
 
 #### Feeds API (READ-only)
-- [ ] **GetFeeds** - Get feed processing reports
-- [ ] **GetFeed** - Get feed details
-- [ ] **GetFeedDocument** - Get feed document
+- [ ] **GetFeeds** - Get feed processing reports [#35](https://github.com/berrydev-ai/sp-api-mcp-go/issues/35)
+- [ ] **GetFeed** - Get feed details [#36](https://github.com/berrydev-ai/sp-api-mcp-go/issues/36)
+- [ ] **GetFeedDocument** - Get feed document [#37](https://github.com/berrydev-ai/sp-api-mcp-go/issues/37)
 
 #### Reports API (Additional READ methods)
-- [ ] **GetReportSchedules** - Get report schedules
-- [ ] **GetReportSchedule** - Get report schedule details
+- [ ] **GetReportSchedules** - Get report schedules [#38](https://github.com/berrydev-ai/sp-api-mcp-go/issues/38)
+- [ ] **GetReportSchedule** - Get report schedule details [#39](https://github.com/berrydev-ai/sp-api-mcp-go/issues/39)
 
 #### Messaging API (READ-only)
-- [ ] **GetMessagingActionsForOrder** - Get messaging actions for order
-- [ ] **GetAttributes** - Get messaging attributes
+- [ ] **GetMessagingActionsForOrder** - Get messaging actions for order [#40](https://github.com/berrydev-ai/sp-api-mcp-go/issues/40)
+- [ ] **GetAttributes** - Get messaging attributes [#41](https://github.com/berrydev-ai/sp-api-mcp-go/issues/41)
 
 #### Notifications API (READ-only)
-- [ ] **GetSubscription** - Get subscription details
-- [ ] **GetSubscriptionById** - Get subscription by ID
-- [ ] **GetDestinations** - Get notification destinations
-- [ ] **GetDestination** - Get destination details
+- [ ] **GetSubscription** - Get subscription details [#42](https://github.com/berrydev-ai/sp-api-mcp-go/issues/42)
+- [ ] **GetSubscriptionById** - Get subscription by ID [#43](https://github.com/berrydev-ai/sp-api-mcp-go/issues/43)
+- [ ] **GetDestinations** - Get notification destinations [#44](https://github.com/berrydev-ai/sp-api-mcp-go/issues/44)
+- [ ] **GetDestination** - Get destination details [#45](https://github.com/berrydev-ai/sp-api-mcp-go/issues/45)
 
 #### Merchant Fulfillment API (READ-only)
-- [ ] **GetEligibleShipmentServices** - Get eligible shipment services
-- [ ] **GetShipment** - Get shipment details
-- [ ] **GetAdditionalSellerInputs** - Get additional seller inputs
+- [ ] **GetEligibleShipmentServices** - Get eligible shipment services [#46](https://github.com/berrydev-ai/sp-api-mcp-go/issues/46)
+- [ ] **GetShipment** - Get shipment details [#47](https://github.com/berrydev-ai/sp-api-mcp-go/issues/47)
+- [ ] **GetAdditionalSellerInputs** - Get additional seller inputs [#48](https://github.com/berrydev-ai/sp-api-mcp-go/issues/48)
 
 #### Service API (READ-only)
-- [ ] **GetServiceJobs** - Get service jobs
-- [ ] **GetServiceJobByServiceJobId** - Get service job details
+- [ ] **GetServiceJobs** - Get service jobs [#49](https://github.com/berrydev-ai/sp-api-mcp-go/issues/49)
+- [ ] **GetServiceJobByServiceJobId** - Get service job details [#50](https://github.com/berrydev-ai/sp-api-mcp-go/issues/50)
 
 #### Shipping API (READ-only)
-- [ ] **GetShipment** - Get shipment details
-- [ ] **GetRates** - Get shipping rates
-- [ ] **GetAccount** - Get account information
-- [ ] **GetTrackingInformation** - Get tracking information
+- [ ] **GetShipment** - Get shipment details [#51](https://github.com/berrydev-ai/sp-api-mcp-go/issues/51)
+- [ ] **GetRates** - Get shipping rates [#52](https://github.com/berrydev-ai/sp-api-mcp-go/issues/52)
+- [ ] **GetAccount** - Get account information [#53](https://github.com/berrydev-ai/sp-api-mcp-go/issues/53)
+- [ ] **GetTrackingInformation** - Get tracking information [#54](https://github.com/berrydev-ai/sp-api-mcp-go/issues/54)
 
 #### Small and Light API (READ-only)
-- [ ] **GetSmallAndLightEnrollmentBySellerSKU** - Get S&L enrollment by SKU
-- [ ] **GetSmallAndLightEligibilityBySellerSKU** - Check S&L eligibility
-- [ ] **GetSmallAndLightFeePreview** - Get S&L fee preview
+- [ ] **GetSmallAndLightEnrollmentBySellerSKU** - Get S&L enrollment by SKU [#55](https://github.com/berrydev-ai/sp-api-mcp-go/issues/55)
+- [ ] **GetSmallAndLightEligibilityBySellerSKU** - Check S&L eligibility [#56](https://github.com/berrydev-ai/sp-api-mcp-go/issues/56)
+- [ ] **GetSmallAndLightFeePreview** - Get S&L fee preview [#57](https://github.com/berrydev-ai/sp-api-mcp-go/issues/57)
 
 #### Solicitations API (READ-only)
-- [ ] **GetSolicitationActionsForOrder** - Get solicitation actions
+- [ ] **GetSolicitationActionsForOrder** - Get solicitation actions [#58](https://github.com/berrydev-ai/sp-api-mcp-go/issues/58)
