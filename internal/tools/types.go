@@ -16,7 +16,7 @@ type Dependencies struct {
 	SellingPartner spapi.Client
 }
 
-type placeholderSpec struct {
+type toolSpec struct {
 	Name        string
 	Title       string
 	Description string
@@ -24,8 +24,7 @@ type placeholderSpec struct {
 	Options     []mcp.ToolOption
 }
 
-func newPlaceholderTool(spec placeholderSpec, deps Dependencies) server.ServerTool {
-	// Build the tool definition using the supplied functional options.
+func serverToolFromSpec(spec toolSpec, handler server.ToolHandlerFunc) server.ServerTool {
 	options := []mcp.ToolOption{
 		mcp.WithDescription(spec.Description),
 		mcp.WithTitleAnnotation(spec.Title),
@@ -41,11 +40,15 @@ func newPlaceholderTool(spec placeholderSpec, deps Dependencies) server.ServerTo
 
 	return server.ServerTool{
 		Tool:    tool,
-		Handler: placeholderHandler(spec, deps),
+		Handler: handler,
 	}
 }
 
-func placeholderHandler(spec placeholderSpec, _ Dependencies) server.ToolHandlerFunc {
+func newPlaceholderTool(spec toolSpec, deps Dependencies) server.ServerTool {
+	return serverToolFromSpec(spec, placeholderHandler(spec, deps))
+}
+
+func placeholderHandler(spec toolSpec, _ Dependencies) server.ToolHandlerFunc {
 	return func(_ context.Context, req mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 		message := spec.Guidance
 		if message == "" {
