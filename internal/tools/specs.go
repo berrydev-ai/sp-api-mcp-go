@@ -95,6 +95,21 @@ var salesGetOrderMetricsSpec = toolSpec{
 	},
 }
 
+var fbaInventoryGetInventorySummariesSpec = toolSpec{
+	Name:        "fbaInventory.getInventorySummaries",
+	Title:       "FBA Inventory Management",
+	Description: "Retrieve inventory summaries for FBA items with detailed quantity breakdown and availability status.",
+	Guidance:    "Use the FBA Inventory API getInventorySummaries operation to get current inventory levels, inbound quantities, and availability status. Filter by SKU or marketplace for specific inventory views.",
+	Options: []mcp.ToolOption{
+		mcp.WithString("granularityType", mcp.Required(), mcp.Enum("Marketplace"), mcp.Description("The granularity type for inventory aggregation (currently only Marketplace is supported).")),
+		mcp.WithString("granularityId", mcp.Description("The granularity ID - for Marketplace granularity, provide the marketplace identifier.")),
+		mcp.WithString("startDateTime", mcp.Description("ISO 8601 timestamp to filter inventory summaries updated after this time.")),
+		mcp.WithArray("sellerSkus", mcp.WithStringItems(), mcp.Description("Filter results to specific seller SKUs.")),
+		mcp.WithString("nextToken", mcp.Description("Pagination token from previous getInventorySummaries call.")),
+		mcp.WithBoolean("details", mcp.Description("Include detailed inventory breakdown (fulfillable, inbound, reserved quantities). Default: true.")),
+	},
+}
+
 var placeholderSpecs = []toolSpec{
 	{
 		Name:        "auth.beginAuthorization",
