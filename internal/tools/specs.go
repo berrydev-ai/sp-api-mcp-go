@@ -95,6 +95,70 @@ var salesGetOrderMetricsSpec = toolSpec{
 	},
 }
 
+<<<<<<< HEAD
+var fbaInventoryGetInventorySummariesSpec = toolSpec{
+	Name:        "fbaInventory.getInventorySummaries",
+	Title:       "FBA Inventory Management",
+	Description: "Retrieve inventory summaries for FBA items with detailed quantity breakdown and availability status.",
+	Guidance:    "Use the FBA Inventory API getInventorySummaries operation to get current inventory levels, inbound quantities, and availability status. Filter by SKU or marketplace for specific inventory views.",
+	Options: []mcp.ToolOption{
+		mcp.WithString("granularityType", mcp.Required(), mcp.Enum("Marketplace"), mcp.Description("The granularity type for inventory aggregation (currently only Marketplace is supported).")),
+		mcp.WithString("granularityId", mcp.Description("The granularity ID - for Marketplace granularity, provide the marketplace identifier.")),
+		mcp.WithString("startDateTime", mcp.Description("ISO 8601 timestamp to filter inventory summaries updated after this time.")),
+		mcp.WithArray("sellerSkus", mcp.WithStringItems(), mcp.Description("Filter results to specific seller SKUs.")),
+		mcp.WithString("nextToken", mcp.Description("Pagination token from previous getInventorySummaries call.")),
+		mcp.WithBoolean("details", mcp.Description("Include detailed inventory breakdown (fulfillable, inbound, reserved quantities). Default: true.")),
+=======
+var reportsGetReportsSpec = toolSpec{
+	Name:        "reports.getReports",
+	Title:       "Report Management",
+	Description: "List reports with optional filtering by type, processing status, creation time, and marketplace.",
+	Guidance:    "Use the Reports API getReports operation to retrieve existing reports. Filter by report types, processing statuses, or time ranges to narrow results.",
+	Options: []mcp.ToolOption{
+		mcp.WithArray("reportTypes", mcp.WithStringItems(), mcp.Description("Filter by specific report types (e.g., GET_FLAT_FILE_ALL_ORDERS_DATA_BY_LAST_UPDATE).")),
+		mcp.WithArray("processingStatuses", mcp.WithStringItems(), mcp.Enum("SUBMITTED", "IN_PROGRESS", "CANCELLED", "DONE", "FATAL"), mcp.Description("Filter by processing status.")),
+		mcp.WithArray("marketplaceIds", mcp.WithStringItems(), mcp.Description("Filter by marketplace identifiers.")),
+		mcp.WithNumber("pageSize", mcp.Description("Number of reports to return (1-100, default 10).")),
+		mcp.WithString("createdSince", mcp.Description("ISO 8601 timestamp to filter reports created after this time.")),
+		mcp.WithString("createdUntil", mcp.Description("ISO 8601 timestamp to filter reports created before this time.")),
+		mcp.WithString("nextToken", mcp.Description("Pagination token from previous getReports call.")),
+	},
+}
+
+var reportsCreateReportSpec = toolSpec{
+	Name:        "reports.createReport",
+	Title:       "Report Management", 
+	Description: "Create a new report request for specified report type, marketplaces, and time range.",
+	Guidance:    "Submit report creation requests using the Reports API createReport operation. Monitor processing status using getReport with the returned reportId.",
+	Options: []mcp.ToolOption{
+		mcp.WithString("reportType", mcp.Required(), mcp.Description("Report type identifier (e.g., GET_FLAT_FILE_ALL_ORDERS_DATA_BY_LAST_UPDATE, GET_MERCHANT_LISTINGS_ALL_DATA).")),
+		mcp.WithArray("marketplaceIds", mcp.Required(), mcp.WithStringItems(), mcp.Description("List of marketplace identifiers for the report.")),
+		mcp.WithString("dataStartTime", mcp.Description("ISO 8601 timestamp for report data start time.")),
+		mcp.WithString("dataEndTime", mcp.Description("ISO 8601 timestamp for report data end time.")),
+		mcp.WithObject("reportOptions", mcp.Description("Optional report-specific configuration parameters as key-value pairs.")),
+	},
+}
+
+var reportsGetReportSpec = toolSpec{
+	Name:        "reports.getReport",
+	Title:       "Report Management",
+	Description: "Get details for a specific report including processing status and document ID when ready.",
+	Guidance:    "Monitor report processing status using the Reports API getReport operation. When status is DONE, use the reportDocumentId with getReportDocument to download the report.",
+	Options: []mcp.ToolOption{
+		mcp.WithString("reportId", mcp.Required(), mcp.Description("Report identifier returned from createReport.")),
+	},
+}
+
+var reportsGetReportDocumentSpec = toolSpec{
+	Name:        "reports.getReportDocument",
+	Title:       "Report Management",
+	Description: "Get download URL and metadata for a completed report document.",
+	Guidance:    "Retrieve pre-signed download URLs for completed reports using the Reports API getReportDocument operation. URLs expire after 5 minutes.",
+	Options: []mcp.ToolOption{
+		mcp.WithString("reportDocumentId", mcp.Required(), mcp.Description("Report document identifier from a completed report.")),
+	},
+}
+
 var fbaInventoryGetInventorySummariesSpec = toolSpec{
 	Name:        "fbaInventory.getInventorySummaries",
 	Title:       "FBA Inventory Management",
