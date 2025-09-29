@@ -3,6 +3,7 @@ package tools
 import (
 	"context"
 	"fmt"
+	"io"
 	"net/http"
 	"strings"
 	"time"
@@ -64,28 +65,34 @@ func executeSalesGetOrderMetrics(ctx context.Context, args salesGetOrderMetricsA
 		return failure, nil
 	}
 
-	resp, err := client.GetOrderMetricsWithResponse(ctx, params)
+	httpResp, err := client.GetOrderMetrics(ctx, params)
 	if err != nil {
 		return mcp.NewToolResultErrorFromErr("sales.getOrderMetrics request failed", err), nil
 	}
-	if resp == nil {
+	if httpResp == nil {
 		return mcp.NewToolResultError("sales.getOrderMetrics returned no response"), nil
 	}
 
-	var apiErrors *sales.ErrorList
-	if resp.Model != nil {
-		apiErrors = resp.Model.Errors
+	body, readErr := io.ReadAll(httpResp.Body)
+	defer httpResp.Body.Close()
+	if readErr != nil {
+		return mcp.NewToolResultErrorFromErr("failed to read sales.getOrderMetrics response", readErr), nil
 	}
 
-	if err := ensureSalesAPIResponse("getOrderMetrics", resp.HTTPResponse, resp.Body, apiErrors); err != nil {
+	decoded, decodeErr := decodeSalesOrderMetrics(body)
+	if decodeErr != nil {
+		return mcp.NewToolResultErrorFromErr("failed to decode sales.getOrderMetrics response", decodeErr), nil
+	}
+
+	if err := ensureSalesAPIResponse("getOrderMetrics", httpResp, body, decoded.apiErrors); err != nil {
 		return mcp.NewToolResultError(err.Error()), nil
 	}
 
-	if resp.Model == nil || resp.Model.Payload == nil {
+	if !decoded.payloadPresent {
 		return mcp.NewToolResultError("sales.getOrderMetrics response payload is empty"), nil
 	}
 
-	result := buildSalesMetricsResult(params, resp.Model.Payload)
+	result := buildSalesMetricsResult(params, decoded.metrics)
 	fallback := buildSalesMetricsFallback(result)
 
 	return mcp.NewToolResultStructured(result, fallback), nil
@@ -139,7 +146,7 @@ func prepareSalesGetOrderMetricsParams(args salesGetOrderMetricsArgs) (*sales.Ge
 	return params, nil
 }
 
-func buildSalesMetricsResult(params *sales.GetOrderMetricsParams, payload *sales.OrderMetricsList) salesGetOrderMetricsResult {
+func buildSalesMetricsResult(params *sales.GetOrderMetricsParams, metrics []sales.OrderMetricsInterval) salesGetOrderMetricsResult {
 	result := salesGetOrderMetricsResult{
 		MarketplaceIDs:      append([]string(nil), params.MarketplaceIds...),
 		Interval:            params.Interval,
@@ -154,8 +161,8 @@ func buildSalesMetricsResult(params *sales.GetOrderMetricsParams, payload *sales
 		RetrievedAt:         time.Now().UTC(),
 	}
 
-	if payload != nil {
-		result.Metrics = append(result.Metrics, (*payload)...)
+	if len(metrics) > 0 {
+		result.Metrics = append(result.Metrics, metrics...)
 	}
 
 	return result
@@ -190,7 +197,7 @@ func buildSalesMetricsFallback(result salesGetOrderMetricsResult) string {
 	return summary.String()
 }
 
-func ensureSalesClient(spClient spapi.Client) (*sales.ClientWithResponses, *mcp.CallToolResult) {
+func ensureSalesClient(spClient spapi.Client) (*sales.Client, *mcp.CallToolResult) {
 	if spClient == nil {
 		return nil, mcp.NewToolResultError("Selling Partner API client is not initialised")
 	}
@@ -211,25 +218,25 @@ func ensureSalesClient(spClient spapi.Client) (*sales.ClientWithResponses, *mcp.
 	return client, nil
 }
 
-func buildSalesClient(spClient spapi.Client) (*sales.ClientWithResponses, error) {
+func buildSalesClient(spClient spapi.Client) (*sales.Client, error) {
 	httpClient := &http.Client{Timeout: 30 * time.Second}
 
-	return sales.NewClientWithResponses(
-		spClient.Endpoint(),
-		withSalesRequestBefore(spClient),
-		sales.WithHTTPClient(httpClient),
-	)
+	return &sales.Client{
+		Endpoint:      spClient.Endpoint(),
+		Client:        httpClient,
+		RequestBefore: buildSalesRequestBefore(spClient),
+	}, nil
 }
 
-func withSalesRequestBefore(spClient spapi.Client) sales.ClientOption {
-	return sales.WithRequestBefore(func(ctx context.Context, req *http.Request) error {
+func buildSalesRequestBefore(spClient spapi.Client) sales.RequestBeforeFn {
+	return func(ctx context.Context, req *http.Request) error {
 		req.Header.Set("X-Amzn-Requestid", uuid.NewString())
 		req.Header.Set("Accept", "application/json")
 		if err := spClient.AuthorizeRequest(req); err != nil {
 			return fmt.Errorf("authorize request: %w", err)
 		}
 		return nil
-	})
+	}
 }
 
 func ensureSalesAPIResponse(operation string, resp *http.Response, body []byte, errors *sales.ErrorList) error {

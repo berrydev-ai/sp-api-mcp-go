@@ -1,0 +1,33 @@
+{
+  "mcpServers": {
+    "Context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp@latest"
+      ]
+    },
+    "deepwiki": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-everything"
+      ]
+    },
+    "exa": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://mcp.exa.ai/mcp?exaApiKey=1dfc2277-a1eb-4b83-b01a-fcddab10b97e"
+      ]
+    },
+    "fetch": {
+      "command": "/Users/eberry/.local/bin/uvx",
+      "args": [
+        "mcp-server-fetch"
+      ]
+    }
+  }
+}
+
