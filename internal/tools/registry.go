@@ -8,12 +8,14 @@ func BuildAll(deps Dependencies) []server.ServerTool {
 	sales := newSalesTools(deps)
 	reports := newReportsTools(deps)
 	fbaInventory := newFBAInventoryTools(deps)
-	all := make([]server.ServerTool, 0, len(orders)+len(sales)+len(reports)+len(fbaInventory)+len(placeholderSpecs))
+	productPricing := newProductPricingTools(deps)
+	all := make([]server.ServerTool, 0, len(orders)+len(sales)+len(reports)+len(fbaInventory)+len(productPricing)+len(placeholderSpecs))
 
 	all = append(all, orders...)
 	all = append(all, sales...)
 	all = append(all, reports...)
 	all = append(all, fbaInventory...)
+	all = append(all, productPricing...)
 
 	for _, spec := range placeholderSpecs {
 		all = append(all, newPlaceholderTool(spec, deps))

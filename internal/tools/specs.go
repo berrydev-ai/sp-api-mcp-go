@@ -95,20 +95,6 @@ var salesGetOrderMetricsSpec = toolSpec{
 	},
 }
 
-<<<<<<< HEAD
-var fbaInventoryGetInventorySummariesSpec = toolSpec{
-	Name:        "fbaInventory.getInventorySummaries",
-	Title:       "FBA Inventory Management",
-	Description: "Retrieve inventory summaries for FBA items with detailed quantity breakdown and availability status.",
-	Guidance:    "Use the FBA Inventory API getInventorySummaries operation to get current inventory levels, inbound quantities, and availability status. Filter by SKU or marketplace for specific inventory views.",
-	Options: []mcp.ToolOption{
-		mcp.WithString("granularityType", mcp.Required(), mcp.Enum("Marketplace"), mcp.Description("The granularity type for inventory aggregation (currently only Marketplace is supported).")),
-		mcp.WithString("granularityId", mcp.Description("The granularity ID - for Marketplace granularity, provide the marketplace identifier.")),
-		mcp.WithString("startDateTime", mcp.Description("ISO 8601 timestamp to filter inventory summaries updated after this time.")),
-		mcp.WithArray("sellerSkus", mcp.WithStringItems(), mcp.Description("Filter results to specific seller SKUs.")),
-		mcp.WithString("nextToken", mcp.Description("Pagination token from previous getInventorySummaries call.")),
-		mcp.WithBoolean("details", mcp.Description("Include detailed inventory breakdown (fulfillable, inbound, reserved quantities). Default: true.")),
-=======
 var reportsGetReportsSpec = toolSpec{
 	Name:        "reports.getReports",
 	Title:       "Report Management",
@@ -171,6 +157,33 @@ var fbaInventoryGetInventorySummariesSpec = toolSpec{
 		mcp.WithArray("sellerSkus", mcp.WithStringItems(), mcp.Description("Filter results to specific seller SKUs.")),
 		mcp.WithString("nextToken", mcp.Description("Pagination token from previous getInventorySummaries call.")),
 		mcp.WithBoolean("details", mcp.Description("Include detailed inventory breakdown (fulfillable, inbound, reserved quantities). Default: true.")),
+	},
+}
+
+var productPricingGetPricingSpec = toolSpec{
+	Name:        "productPricing.getPricing",
+	Title:       "Product Pricing",
+	Description: "Get pricing information for products including buy box prices, listing prices, and offer counts.",
+	Guidance:    "Use the Product Pricing API getPricing operation to retrieve current pricing information for up to 20 ASINs or SKUs. Choose itemType based on whether you're querying by ASIN or SKU.",
+	Options: []mcp.ToolOption{
+		mcp.WithString("marketplaceId", mcp.Required(), mcp.Description("Marketplace identifier (e.g., ATVPDKIKX0DER for US).")),
+		mcp.WithString("itemType", mcp.Required(), mcp.Enum("Asin", "Sku"), mcp.Description("Whether to query by ASIN or SKU identifiers.")),
+		mcp.WithArray("asins", mcp.WithStringItems(), mcp.Description("List of ASINs (required when itemType is 'Asin', max 20).")),
+		mcp.WithArray("skus", mcp.WithStringItems(), mcp.Description("List of seller SKUs (required when itemType is 'Sku', max 20).")),
+		mcp.WithString("itemCondition", mcp.Enum("New", "Used", "Collectible", "Refurbished", "Club"), mcp.Description("Filter by item condition (optional).")),
+	},
+}
+
+var productPricingGetCompetitivePricingSpec = toolSpec{
+	Name:        "productPricing.getCompetitivePricing",
+	Title:       "Product Pricing",
+	Description: "Get competitive pricing information including competitor prices, trade-in values, and price rankings.",
+	Guidance:    "Use the Product Pricing API getCompetitivePricing operation to analyze competitive landscape for up to 20 ASINs or SKUs. This provides insights into competitor pricing strategies.",
+	Options: []mcp.ToolOption{
+		mcp.WithString("marketplaceId", mcp.Required(), mcp.Description("Marketplace identifier (e.g., ATVPDKIKX0DER for US).")),
+		mcp.WithString("itemType", mcp.Required(), mcp.Enum("Asin", "Sku"), mcp.Description("Whether to query by ASIN or SKU identifiers.")),
+		mcp.WithArray("asins", mcp.WithStringItems(), mcp.Description("List of ASINs (required when itemType is 'Asin', max 20).")),
+		mcp.WithArray("skus", mcp.WithStringItems(), mcp.Description("List of seller SKUs (required when itemType is 'Sku', max 20).")),
 	},
 }
 
