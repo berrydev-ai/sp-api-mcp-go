@@ -176,4 +176,110 @@ For deeper debugging, enable MCP client logging (Cursor/Claude provide toggles) 
 
 ---
 
-Happy building!
+## TODO - SP-API Implementation Checklist
+
+### Currently Implemented (12 functions)
+- [x] **Authorization**: GetAuthorizationCode  
+- [x] **Orders**: GetOrders, GetOrder, GetOrderAddress, GetOrderBuyerInfo, GetOrderItems, GetOrderItemsBuyerInfo
+- [x] **Sales**: GetOrderMetrics
+- [x] **Reports**: GetReports, CreateReport, GetReport, GetReportDocument
+
+### Phase 1: Core READ Operations (High Priority)
+
+#### Finances API
+- [ ] **ListFinancialEventGroups** - List financial event groups
+- [ ] **ListFinancialEventsByGroupId** - List financial events by group
+- [ ] **ListFinancialEventsByOrderId** - List financial events by order
+- [ ] **ListFinancialEvents** - List all financial events
+
+#### FBA Inventory API
+- [ ] **GetInventorySummaries** - Get inventory summaries
+
+#### Product Pricing API
+- [ ] **GetPricing** - Get pricing for products
+- [ ] **GetCompetitivePricing** - Get competitive pricing
+- [ ] **GetListingOffers** - Get listing offers
+- [ ] **GetItemOffers** - Get item offers
+- [ ] **GetItemOffersBatch** - Get item offers in batch
+
+#### Product Fees API
+- [ ] **GetMyFeesEstimateForSKU** - Get fees estimate for SKU
+- [ ] **GetMyFeesEstimateForASIN** - Get fees estimate for ASIN
+
+### Phase 2: Enhanced READ Functionality (Medium Priority)
+
+#### Catalog Items API
+- [ ] **SearchCatalogItems** - Search for catalog items
+- [ ] **GetCatalogItem** - Get details for a specific catalog item
+
+#### Listings Items API
+- [ ] **GetListingsItem** - Get listing details
+
+#### Sellers API
+- [ ] **GetMarketplaceParticipations** - Get marketplace participations
+
+#### FBA Inbound API (READ-only)
+- [ ] **GetInboundGuidance** - Get inbound guidance for items
+- [ ] **GetPreorderInfo** - Get preorder information
+- [ ] **GetPrepInstructions** - Get prep instructions
+- [ ] **GetTransportDetails** - Get transport details
+- [ ] **GetLabels** - Get inbound shipment labels
+- [ ] **GetBillOfLading** - Get bill of lading
+- [ ] **GetShipments** - List inbound shipments
+- [ ] **GetShipmentItemsByShipmentId** - Get shipment items
+- [ ] **GetShipmentItems** - Get shipment items across shipments
+
+#### FBA Outbound API (READ-only)
+- [ ] **GetFulfillmentPreview** - Get fulfillment preview
+- [ ] **GetFulfillmentOrder** - Get fulfillment order details
+- [ ] **ListAllFulfillmentOrders** - List all fulfillment orders
+- [ ] **GetPackageTrackingDetails** - Get package tracking details
+- [ ] **ListReturnReasonCodes** - List return reason codes
+- [ ] **GetFulfillmentReturn** - Get fulfillment return
+- [ ] **GetFeatures** - Get available features
+- [ ] **GetFeatureInventory** - Get feature inventory
+- [ ] **GetFeatureSKU** - Get feature SKU
+
+### Phase 3: Advanced READ Features (Lower Priority)
+
+#### Feeds API (READ-only)
+- [ ] **GetFeeds** - Get feed processing reports
+- [ ] **GetFeed** - Get feed details
+- [ ] **GetFeedDocument** - Get feed document
+
+#### Reports API (Additional READ methods)
+- [ ] **GetReportSchedules** - Get report schedules
+- [ ] **GetReportSchedule** - Get report schedule details
+
+#### Messaging API (READ-only)
+- [ ] **GetMessagingActionsForOrder** - Get messaging actions for order
+- [ ] **GetAttributes** - Get messaging attributes
+
+#### Notifications API (READ-only)
+- [ ] **GetSubscription** - Get subscription details
+- [ ] **GetSubscriptionById** - Get subscription by ID
+- [ ] **GetDestinations** - Get notification destinations
+- [ ] **GetDestination** - Get destination details
+
+#### Merchant Fulfillment API (READ-only)
+- [ ] **GetEligibleShipmentServices** - Get eligible shipment services
+- [ ] **GetShipment** - Get shipment details
+- [ ] **GetAdditionalSellerInputs** - Get additional seller inputs
+
+#### Service API (READ-only)
+- [ ] **GetServiceJobs** - Get service jobs
+- [ ] **GetServiceJobByServiceJobId** - Get service job details
+
+#### Shipping API (READ-only)
+- [ ] **GetShipment** - Get shipment details
+- [ ] **GetRates** - Get shipping rates
+- [ ] **GetAccount** - Get account information
+- [ ] **GetTrackingInformation** - Get tracking information
+
+#### Small and Light API (READ-only)
+- [ ] **GetSmallAndLightEnrollmentBySellerSKU** - Get S&L enrollment by SKU
+- [ ] **GetSmallAndLightEligibilityBySellerSKU** - Check S&L eligibility
+- [ ] **GetSmallAndLightFeePreview** - Get S&L fee preview
+
+#### Solicitations API (READ-only)
+- [ ] **GetSolicitationActionsForOrder** - Get solicitation actions
