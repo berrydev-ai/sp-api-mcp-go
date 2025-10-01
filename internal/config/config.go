@@ -13,6 +13,7 @@ const (
 	defaultInstructions  = "This MCP server organizes Amazon Selling Partner API domains into discrete tools and documentation resources. The current implementation exposes placeholder tools; they should be replaced with real SP-API integrations as capabilities mature."
 	defaultEndpoint      = "https://sellingpartnerapi-na.amazon.com"
 	defaultTransport     = "stdio"
+	defaultHost          = "localhost"
 	defaultPort          = "8080"
 )
 
@@ -53,6 +54,7 @@ type Config struct {
 	SPAPIEndpoint string
 	Credentials   Credentials
 	Transport     Transport
+	Host          string
 	Port          string
 }
 
@@ -74,6 +76,7 @@ func Load() (Config, error) {
 			RefreshToken: strings.TrimSpace(os.Getenv("SP_API_REFRESH_TOKEN")),
 		},
 		Transport: transport,
+		Host:      envOrDefault("HOST", defaultHost),
 		Port:      envOrDefault("PORT", defaultPort),
 	}
 

@@ -40,15 +40,20 @@ func main() {
 
 	srv := app.NewServer(cfg, app.Dependencies{SellingPartner: spClient})
 
+	baseUrl := "http://" + cfg.Host + ":" + cfg.Port
+	if cfg.Port == "443" {
+		baseUrl = "https://" + cfg.Host
+	}
+
 	switch cfg.Transport {
 	case config.TransportSSE:
-		log.Printf("starting SSE MCP server on port %s", cfg.Port)
+		log.Printf("starting SSE MCP server at %s/sse", baseUrl)
 		sse := server.NewSSEServer(srv)
 		if err := sse.Start(":" + cfg.Port); err != nil {
 			log.Fatalf("sse server exited: %v", err)
 		}
 	case config.TransportStreamableHTTP:
-		log.Printf("starting StreamableHTTP MCP server on port %s", cfg.Port)
+		log.Printf("starting StreamableHTTP MCP server at %s/mcp", baseUrl)
 		httpSrv := server.NewStreamableHTTPServer(srv)
 		if err := httpSrv.Start(":" + cfg.Port); err != nil {
 			log.Fatalf("streamable HTTP server exited: %v", err)

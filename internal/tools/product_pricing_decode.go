@@ -39,8 +39,8 @@ type productPricingGetCompetitivePricingResult struct {
 
 // DTO types for unmarshaling response data
 type productPricingResponseDTO struct {
-	Payload *json.RawMessage             `json:"payload,omitempty"`
-	Errors  *productPricing.ErrorList    `json:"errors,omitempty"`
+	Payload *json.RawMessage          `json:"payload,omitempty"`
+	Errors  *productPricing.ErrorList `json:"errors,omitempty"`
 }
 
 func decodeProductPricingResponse(resp *http.Response, operation string) (*mcp.CallToolResult, error) {
@@ -144,10 +144,10 @@ func buildGetCompetitivePricingResult(decoded productPricingDecoded) productPric
 func buildGetPricingFallback(result productPricingGetPricingResult) string {
 	var summary strings.Builder
 	summary.WriteString(fmt.Sprintf("Product pricing retrieved for %d items", result.ItemCount))
-	
+
 	if result.ItemCount > 0 {
 		summary.WriteString(fmt.Sprintf(" at %s", result.RetrievedAt.Format("15:04:05 UTC")))
-		
+
 		// Try to extract some key pricing info for the summary
 		for i, item := range result.PricePoints {
 			if i >= 3 { // Limit to first 3 items in summary
@@ -158,7 +158,7 @@ func buildGetPricingFallback(result productPricingGetPricingResult) string {
 					summary.WriteString("; ")
 				}
 				summary.WriteString(" - ")
-				
+
 				// Try to get identifier
 				if asin, ok := itemMap["ASIN"].(string); ok {
 					summary.WriteString(fmt.Sprintf("ASIN %s", asin))
@@ -167,7 +167,7 @@ func buildGetPricingFallback(result productPricingGetPricingResult) string {
 				} else {
 					summary.WriteString("Item")
 				}
-				
+
 				// Try to get price info
 				if buyingPrice, ok := itemMap["BuyingPrice"].(map[string]interface{}); ok {
 					if listPrice, ok := buyingPrice["ListingPrice"].(map[string]interface{}); ok {
@@ -181,17 +181,17 @@ func buildGetPricingFallback(result productPricingGetPricingResult) string {
 			}
 		}
 	}
-	
+
 	return summary.String()
 }
 
 func buildGetCompetitivePricingFallback(result productPricingGetCompetitivePricingResult) string {
 	var summary strings.Builder
 	summary.WriteString(fmt.Sprintf("Competitive pricing retrieved for %d items", result.ItemCount))
-	
+
 	if result.ItemCount > 0 {
 		summary.WriteString(fmt.Sprintf(" at %s", result.RetrievedAt.Format("15:04:05 UTC")))
-		
+
 		// Try to extract some key competitive pricing info for the summary
 		for i, item := range result.CompetitiveItems {
 			if i >= 3 { // Limit to first 3 items in summary
@@ -202,7 +202,7 @@ func buildGetCompetitivePricingFallback(result productPricingGetCompetitivePrici
 					summary.WriteString("; ")
 				}
 				summary.WriteString(" - ")
-				
+
 				// Try to get identifier
 				if identifier, ok := itemMap["identifier"].(map[string]interface{}); ok {
 					if asin, ok := identifier["ASIN"].(string); ok {
@@ -211,7 +211,7 @@ func buildGetCompetitivePricingFallback(result productPricingGetCompetitivePrici
 						summary.WriteString(fmt.Sprintf("SKU %s", sku))
 					}
 				}
-				
+
 				// Try to get competitive price count
 				if competitivePricing, ok := itemMap["competitivePricing"].(map[string]interface{}); ok {
 					if prices, ok := competitivePricing["CompetitivePrices"].([]interface{}); ok {
@@ -221,14 +221,48 @@ func buildGetCompetitivePricingFallback(result productPricingGetCompetitivePrici
 			}
 		}
 	}
-	
+
 	return summary.String()
 }
 
 func handleProductPricingAPIError(statusCode int, body []byte, operation string) (*mcp.CallToolResult, error) {
-	message := fmt.Sprintf("%s failed with status %d", operation, statusCode)
+	message := fmt.Sprintf("%s failed with status %d %s", operation, statusCode, http.StatusText(statusCode))
+
+	// Try to parse the body as a structured error response
 	if len(body) > 0 {
-		message += fmt.Sprintf(": %s", string(body))
+		var dto productPricingResponseDTO
+		if err := json.Unmarshal(body, &dto); err == nil && dto.Errors != nil && len(*dto.Errors) > 0 {
+			// Extract detailed error messages from the ErrorList
+			errorDetails := []string{}
+			for _, apiErr := range *dto.Errors {
+				var builder strings.Builder
+				if msg := strings.TrimSpace(apiErr.Message); msg != "" {
+					builder.WriteString(msg)
+				}
+				if apiErr.Code != "" {
+					builder.WriteString(" (" + apiErr.Code + ")")
+				}
+				if apiErr.Details != nil {
+					if detail := strings.TrimSpace(*apiErr.Details); detail != "" {
+						builder.WriteString(": " + detail)
+					}
+				}
+				if text := builder.String(); text != "" {
+					errorDetails = append(errorDetails, text)
+				}
+			}
+			if len(errorDetails) > 0 {
+				message += ": " + strings.Join(errorDetails, "; ")
+			}
+		} else {
+			// Fall back to raw body snippet if parsing fails
+			bodySnippet := string(body)
+			if len(bodySnippet) > 512 {
+				bodySnippet = bodySnippet[:512] + "..."
+			}
+			message += ": " + bodySnippet
+		}
 	}
+
 	return mcp.NewToolResultError(message), nil
 }

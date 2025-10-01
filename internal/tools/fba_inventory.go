@@ -26,11 +26,11 @@ type fbaInventoryGetInventorySummariesArgs struct {
 }
 
 type fbaInventoryGetInventorySummariesResult struct {
-	GranularityType    string                           `json:"granularityType"`
-	GranularityID      string                           `json:"granularityId,omitempty"`
-	InventorySummaries []fbaInventory.InventorySummary  `json:"inventorySummaries"`
-	NextToken          string                           `json:"nextToken,omitempty"`
-	RetrievedAt        time.Time                        `json:"retrievedAt"`
+	GranularityType    string                          `json:"granularityType"`
+	GranularityID      string                          `json:"granularityId,omitempty"`
+	InventorySummaries []fbaInventory.InventorySummary `json:"inventorySummaries"`
+	NextToken          string                          `json:"nextToken,omitempty"`
+	RetrievedAt        time.Time                       `json:"retrievedAt"`
 }
 
 func newFBAInventoryTools(deps Dependencies) []server.ServerTool {
@@ -182,6 +182,11 @@ func ensureFBAInventoryAPIResponse(operation string, resp *http.Response, body [
 
 	statusCode := resp.StatusCode
 	if statusCode < http.StatusOK || statusCode >= http.StatusMultipleChoices {
+		// Try to extract detailed error messages from the ErrorList first
+		if errors != nil && len(*errors) > 0 {
+			return fmt.Errorf("%s: request failed with status %d %s: %s", operation, statusCode, http.StatusText(statusCode), formatFBAInventoryErrors(*errors))
+		}
+		// Fall back to body snippet if no structured errors available
 		return fmt.Errorf("%s: request failed with status %d %s: %s", operation, statusCode, http.StatusText(statusCode), sanitizeBodySnippet(body))
 	}
 

@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "sp-api": {
+      "command": "go",
+      "args": ["run", "./cmd/server"],
+      "cwd": "/absolute/path/to/sp-api-mcp-go",
+      "env": {
+        "SP_API_CLIENT_ID": "amzn1.application-oa2-client...",
+        "SP_API_CLIENT_SECRET": "...",
+        "SP_API_REFRESH_TOKEN": "Atzr|...",
+        "SP_API_ENDPOINT": "https://sellingpartnerapi-na.amazon.com"
+      }
+    }
+  }
+}

@@ -17,13 +17,13 @@ import (
 )
 
 type reportsGetReportsArgs struct {
-	ReportTypes              []string `json:"reportTypes"`
-	ProcessingStatuses       []string `json:"processingStatuses"`
-	MarketplaceIDs           []string `json:"marketplaceIds"`
-	PageSize                 *int     `json:"pageSize"`
-	CreatedSince             string   `json:"createdSince"`
-	CreatedUntil             string   `json:"createdUntil"`
-	NextToken                string   `json:"nextToken"`
+	ReportTypes        []string `json:"reportTypes"`
+	ProcessingStatuses []string `json:"processingStatuses"`
+	MarketplaceIDs     []string `json:"marketplaceIds"`
+	PageSize           *int     `json:"pageSize"`
+	CreatedSince       string   `json:"createdSince"`
+	CreatedUntil       string   `json:"createdUntil"`
+	NextToken          string   `json:"nextToken"`
 }
 
 type reportsGetReportsResult struct {
@@ -33,11 +33,11 @@ type reportsGetReportsResult struct {
 }
 
 type reportsCreateReportArgs struct {
-	ReportType      string            `json:"reportType"`
-	MarketplaceIDs  []string          `json:"marketplaceIds"`
-	DataStartTime   string            `json:"dataStartTime"`
-	DataEndTime     string            `json:"dataEndTime"`
-	ReportOptions   map[string]string `json:"reportOptions"`
+	ReportType     string            `json:"reportType"`
+	MarketplaceIDs []string          `json:"marketplaceIds"`
+	DataStartTime  string            `json:"dataStartTime"`
+	DataEndTime    string            `json:"dataEndTime"`
+	ReportOptions  map[string]string `json:"reportOptions"`
 }
 
 type reportsCreateReportResult struct {
@@ -51,15 +51,15 @@ type reportsGetReportArgs struct {
 }
 
 type reportsGetReportResult struct {
-	ReportID        string    `json:"reportId"`
-	ReportType      string    `json:"reportType"`
-	ProcessingStatus string   `json:"processingStatus"`
-	CreatedTime     string    `json:"createdTime"`
-	ProcessingStartTime string `json:"processingStartTime,omitempty"`
-	ProcessingEndTime   string `json:"processingEndTime,omitempty"`
-	ReportDocumentID    string `json:"reportDocumentId,omitempty"`
-	Report          reports.Report `json:"report"`
-	RetrievedAt     time.Time      `json:"retrievedAt"`
+	ReportID            string         `json:"reportId"`
+	ReportType          string         `json:"reportType"`
+	ProcessingStatus    string         `json:"processingStatus"`
+	CreatedTime         string         `json:"createdTime"`
+	ProcessingStartTime string         `json:"processingStartTime,omitempty"`
+	ProcessingEndTime   string         `json:"processingEndTime,omitempty"`
+	ReportDocumentID    string         `json:"reportDocumentId,omitempty"`
+	Report              reports.Report `json:"report"`
+	RetrievedAt         time.Time      `json:"retrievedAt"`
 }
 
 type reportsGetReportDocumentArgs struct {
@@ -107,33 +107,33 @@ func executeReportsGetReports(ctx context.Context, args reportsGetReportsArgs, s
 	}
 
 	params := &reports.GetReportsParams{}
-	
+
 	if nextToken := strings.TrimSpace(args.NextToken); nextToken != "" {
 		params.NextToken = &nextToken
 	}
-	
+
 	if len(args.ReportTypes) > 0 {
 		params.ReportTypes = &args.ReportTypes
 	}
-	
+
 	if len(args.ProcessingStatuses) > 0 {
 		params.ProcessingStatuses = &args.ProcessingStatuses
 	}
-	
+
 	if len(args.MarketplaceIDs) > 0 {
 		params.MarketplaceIds = &args.MarketplaceIDs
 	}
-	
+
 	if args.PageSize != nil && *args.PageSize > 0 && *args.PageSize <= 100 {
 		params.PageSize = args.PageSize
 	}
-	
+
 	if createdSince := strings.TrimSpace(args.CreatedSince); createdSince != "" {
 		if parsedTime, err := time.Parse(time.RFC3339, createdSince); err == nil {
 			params.CreatedSince = &parsedTime
 		}
 	}
-	
+
 	if createdUntil := strings.TrimSpace(args.CreatedUntil); createdUntil != "" {
 		if parsedTime, err := time.Parse(time.RFC3339, createdUntil); err == nil {
 			params.CreatedUntil = &parsedTime
@@ -417,6 +417,11 @@ func ensureReportsAPIResponse(operation string, resp *http.Response, body []byte
 
 	statusCode := resp.StatusCode
 	if statusCode < http.StatusOK || statusCode >= http.StatusMultipleChoices {
+		// Try to extract detailed error messages from the ErrorList first
+		if errors != nil && len(*errors) > 0 {
+			return fmt.Errorf("%s: request failed with status %d %s: %s", operation, statusCode, http.StatusText(statusCode), formatReportsErrors(*errors))
+		}
+		// Fall back to body snippet if no structured errors available
 		return fmt.Errorf("%s: request failed with status %d %s: %s", operation, statusCode, http.StatusText(statusCode), sanitizeBodySnippet(body))
 	}
 

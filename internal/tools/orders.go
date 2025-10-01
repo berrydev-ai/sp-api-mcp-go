@@ -3,7 +3,9 @@ package tools
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 
@@ -171,6 +173,7 @@ func executeOrdersListOrders(ctx context.Context, args ordersListOrdersArgs, spC
 	}
 
 	if err := ensureOrdersAPIResponse("listOrders", resp.HTTPResponse, resp.Body, apiErrors); err != nil {
+		log.Printf("[ERROR] orders.listOrders: %v", err)
 		return mcp.NewToolResultError(err.Error()), nil
 	}
 
@@ -535,8 +538,21 @@ func ensureOrdersAPIResponse(operation string, resp *http.Response, body []byte,
 		return fmt.Errorf("%s: no HTTP response returned", operation)
 	}
 
+	verbose := os.Getenv("VERBOSE") == "true"
+
+	if verbose {
+		log.Printf("[DEBUG] %s - HTTP Status: %d %s", operation, resp.StatusCode, http.StatusText(resp.StatusCode))
+		log.Printf("[DEBUG] %s - Response Headers: %v", operation, resp.Header)
+		log.Printf("[DEBUG] %s - Response Body: %s", operation, string(body))
+	}
+
 	statusCode := resp.StatusCode
 	if statusCode < http.StatusOK || statusCode >= http.StatusMultipleChoices {
+		// Try to extract detailed error messages from the ErrorList first
+		if errors != nil && len(*errors) > 0 {
+			return fmt.Errorf("%s: request failed with status %d %s: %s", operation, statusCode, http.StatusText(statusCode), formatOrdersErrors(*errors))
+		}
+		// Fall back to body snippet if no structured errors available
 		return fmt.Errorf("%s: request failed with status %d %s: %s", operation, statusCode, http.StatusText(statusCode), sanitizeBodySnippet(body))
 	}
 

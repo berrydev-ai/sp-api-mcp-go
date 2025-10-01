@@ -246,6 +246,11 @@ func ensureSalesAPIResponse(operation string, resp *http.Response, body []byte, 
 
 	statusCode := resp.StatusCode
 	if statusCode < http.StatusOK || statusCode >= http.StatusMultipleChoices {
+		// Try to extract detailed error messages from the ErrorList first
+		if errors != nil && len(*errors) > 0 {
+			return fmt.Errorf("%s: request failed with status %d %s: %s", operation, statusCode, http.StatusText(statusCode), formatSalesErrors(*errors))
+		}
+		// Fall back to body snippet if no structured errors available
 		return fmt.Errorf("%s: request failed with status %d %s: %s", operation, statusCode, http.StatusText(statusCode), sanitizeBodySnippet(body))
 	}
 

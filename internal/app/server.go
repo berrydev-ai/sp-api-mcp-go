@@ -25,6 +25,7 @@ func NewServer(cfg config.Config, deps Dependencies) *server.MCPServer {
 		server.WithRecovery(),
 		server.WithResourceRecovery(),
 		server.WithLogging(),
+		server.WithToolHandlerMiddleware(ErrorLoggingMiddleware),
 	)
 
 	srv.AddTools(tools.BuildAll(tools.Dependencies{SellingPartner: deps.SellingPartner})...)

@@ -1,3 +1,4 @@
 .gocache
 .env
 __reference/*
+/config.json
