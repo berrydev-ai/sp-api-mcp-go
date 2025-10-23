@@ -161,8 +161,15 @@ func executeOrdersListOrders(ctx context.Context, args ordersListOrdersArgs, spC
 
 	resp, err := client.GetOrdersWithResponse(ctx, &params)
 	if err != nil {
-		return mcp.NewToolResultErrorFromErr("orders.listOrders request failed", err), nil
+		//	// Parse response body
+		errorMessage := "orders.listOrders request failed"
+		if resp != nil && resp.Model != nil && resp.Model.Errors != nil && len(*resp.Model.Errors) > 0 {
+			errorMessage = errorMessage + ": " + formatOrdersErrors(*resp.Model.Errors)
+		}
+		log.Printf(errorMessage)
+		//	return mcp.NewToolResultErrorFromErr(errorMessage, err), nil
 	}
+
 	if resp == nil {
 		return mcp.NewToolResultError("orders.listOrders returned no response"), nil
 	}

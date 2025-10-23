@@ -1,6 +1,45 @@
 # Selling Partner API MCP Server (Go)
 
-This project packages Amazon's Selling Partner API into a Model Context Protocol (MCP) server written in Go. The server uses [`mark3labs/mcp-go`](https://github.com/mark3labs/mcp-go) for the transport/runtime layer and [`amzapi/selling-partner-api-sdk`](https://github.com/amzapi/selling-partner-api-sdk) for SP-API clients. Most tools still act as placeholders, but the Orders suite now calls the live SP-API so you can retrieve listings of orders, addresses, buyer info, and line items.
+This project packages Amazon's Selling Partner API into a Model Context Protocol (MCP) server written in Go. The server uses [`mark3labs/mcp-go`](https://github.com/mark3labs/mcp-go) for the transport/runtime layer and [`amzapi/selling-partner-api-sdk`](https://github.com/amzapi/selling-partner-api-sdk) for SP-API clients. The implementation includes live integrations for Orders, Sales, Reports, FBA Inventory, and Product Pricing APIs, with additional endpoints planned (see TODO checklist below).
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Technology Stack](#technology-stack)
+- [Prerequisites](#prerequisites)
+- [Configuration](#configuration)
+- [Quick Start](#quick-start)
+- [Available Commands](#available-commands)
+- [Registering with MCP Clients](#registering-the-server-with-an-mcp-client)
+- [Tools & Resources](#tools--resources-exposed)
+- [Development Workflow](#development-workflow)
+- [Testing](#testing)
+- [Project Structure](#project-structure)
+- [Troubleshooting](#troubleshooting)
+- [TODO - SP-API Implementation Checklist](#todo---sp-api-implementation-checklist)
+- [License](#license)
+
+---
+
+## Overview
+
+An MCP server that exposes Amazon Selling Partner API operations as tools for AI assistants. Supports multiple transport modes (stdio, SSE, Streamable HTTP) for integration with various MCP clients including Cursor, Claude Desktop, and Continue.
+
+**Current Status**: Active development with 12+ implemented endpoints including order management, sales metrics, reporting, inventory summaries, and pricing information.
+
+---
+
+## Technology Stack
+
+- **Language**: Go 1.22+
+- **Package Manager**: Go modules
+- **Key Dependencies**:
+  - `mark3labs/mcp-go` v0.39.1 - MCP protocol implementation
+  - `amzapi/selling-partner-api-sdk` - Amazon SP-API client library
+  - `joho/godotenv` v1.5.1 - Environment variable management
+  - `google/uuid` v1.6.0 - UUID generation
 
 ---
 
@@ -66,6 +105,39 @@ Build a reusable binary if you plan to host it somewhere persistent:
 
 ```bash
 go build -o bin/sp-api-mcp ./cmd/server
+```
+
+---
+
+## Available Commands
+
+The project includes a `Makefile` with several convenience targets for development:
+
+```bash
+# Run development server with HTTP transport on port 8002
+make dev-http
+
+# Run development server with SSE transport on port 8002
+make dev-sse
+
+# Run MCP Inspector for debugging tool interactions
+make inspector
+```
+
+### Manual Commands
+
+```bash
+# Build the project
+go build ./...
+
+# Run tests
+go test ./...
+
+# Build production binary
+go build -o bin/sp-api-mcp ./cmd/server
+
+# Run the server directly
+go run ./cmd/server
 ```
 
 ---
@@ -152,6 +224,63 @@ The current build ships placeholder tools to help you scaffold real SP-API workf
 - `fba.createInboundShipmentPlan` – Placeholder for FBA inbound shipment planning.
 
 Documentation resources are available under URIs like `amazon-sp-api://overview`, providing structured notes you can expand with live references as integrations are implemented.
+
+---
+
+## Testing
+
+Run the test suite to ensure code quality:
+
+```bash
+# Run all tests
+go test ./...
+
+# Run tests with verbose output
+go test -v ./...
+
+# Run tests with coverage
+go test -cover ./...
+```
+
+**Current test coverage**: Tests exist for sales API operations (`internal/tools/sales_test.go`). Additional test coverage for other API endpoints is planned.
+
+---
+
+## Project Structure
+
+```
+.
+├── cmd/
+│   └── server/          # Main entry point (main.go)
+├── internal/
+│   ├── app/             # MCP server setup and middleware
+│   ├── config/          # Configuration loading and validation
+│   ├── resources/       # MCP resource definitions
+│   ├── spapi/           # SP-API client wrapper
+│   └── tools/           # MCP tool implementations
+│       ├── orders.go              # Orders API tools
+│       ├── sales.go               # Sales API tools  
+│       ├── reports.go             # Reports API tools
+│       ├── fba_inventory.go       # FBA Inventory tools
+│       ├── product_pricing.go     # Product Pricing tools
+│       ├── *_decode.go            # Response decoders
+│       ├── registry.go            # Tool registration
+│       └── specs.go               # Tool specifications
+├── __reference/         # Reference SP-API SDK implementation
+├── bin/                 # Compiled binaries (gitignored)
+├── config.example.json  # Example MCP client configuration
+├── .env                 # Local environment variables (gitignored)
+├── go.mod               # Go module definition
+├── Makefile             # Development convenience commands
+└── README.md            # This file
+```
+
+**Key Components**:
+- **Entry Point**: `cmd/server/main.go` - Loads configuration, initializes SP-API client, starts MCP server
+- **Configuration**: `internal/config/` - Environment-based configuration with validation
+- **SP-API Client**: `internal/spapi/` - Wraps the amzapi SDK with credential management
+- **Tools**: `internal/tools/` - Individual SP-API operations exposed as MCP tools
+- **Resources**: `internal/resources/` - Documentation resources for the MCP protocol
 
 ---
 
@@ -283,3 +412,11 @@ For deeper debugging, enable MCP client logging (Cursor/Claude provide toggles) 
 
 #### Solicitations API (READ-only)
 - [ ] **GetSolicitationActionsForOrder** - Get solicitation actions [#58](https://github.com/berrydev-ai/sp-api-mcp-go/issues/58)
+
+---
+
+## License
+
+**TODO**: No LICENSE file currently exists in this repository. Consider adding an appropriate open-source license (e.g., MIT, Apache 2.0) to clarify usage rights and distribution terms.
+
+The referenced SP-API SDK in `__reference/selling-partner-api-sdk/` is licensed separately - see `__reference/selling-partner-api-sdk/LICENSE` for details.

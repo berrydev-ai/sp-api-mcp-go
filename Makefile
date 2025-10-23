@@ -1,4 +1,13 @@
-.PHONY: inspector
+.PHONY: help inspector
+
+.DEFAULT_GOAL := help
+
+help:
+	@echo "Available targets:"
+	@echo "  make dev-http    - Start development server with HTTP transport (port 8002)"
+	@echo "  make dev-sse     - Start development server with SSE transport (port 8002)"
+	@echo "  make inspector   - Run MCP Inspector debugging tool"
+	@echo "  make help        - Show this help message"
 
 dev-http:
 	@echo "Starting development server"
